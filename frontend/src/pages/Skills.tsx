@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import axios from 'axios'
 import {
   FaReact, FaDocker, FaLinux, FaWindows
 } from 'react-icons/fa'
@@ -9,15 +7,6 @@ import {
   SiNestjs, SiMikrotik, SiCisco, SiUbiquiti,
   SiFortinet
 } from 'react-icons/si'
-
-interface Skill {
-  id: number
-  name: string
-  category: string
-  level: string
-  imageUrl?: string
-  description?: string
-}
 
 const Skills = () => {
 
@@ -124,7 +113,7 @@ const Skills = () => {
             viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {techStackSkills.map((skill, index) => (
+            {techStackSkills.map((skill) => (
               <motion.div
                 key={skill.name}
                 variants={itemVariants}
@@ -161,7 +150,7 @@ const Skills = () => {
             viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {networkingSkills.map((skill, index) => (
+            {networkingSkills.map((skill) => (
               <motion.div
                 key={skill.name}
                 variants={itemVariants}
@@ -197,7 +186,7 @@ const Skills = () => {
             viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {osSkills.map((skill, index) => (
+            {osSkills.map((skill) => (
               <motion.div
                 key={skill.name}
                 variants={itemVariants}

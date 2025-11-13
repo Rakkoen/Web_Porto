@@ -118,7 +118,7 @@ const Contact = () => {
                   url: 'https://instagram.com/rakhahendriansyah',
                   description: 'Follow my personal journey'
                 }
-              ].map((social, index) => (
+              ].map((social) => (
                 <motion.a
                   key={social.name}
                   href={social.url}
