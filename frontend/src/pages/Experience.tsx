@@ -1,41 +1,46 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import axios from 'axios'
-
-interface Experience {
-  id: number
-  title: string
-  company?: string
-  location?: string
-  startDate: string
-  endDate?: string
-  description: string
-  type: string
-  current: boolean
-}
 
 const Experience = () => {
-  const [experiences, setExperiences] = useState<Experience[]>([])
-  const [selectedType, setSelectedType] = useState<string>('all')
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchExperiences = async () => {
-      try {
-        const response = await axios.get('/api/experience')
-        setExperiences(response.data)
-      } catch (error) {
-        console.error('Error fetching experiences:', error)
-      } finally {
-        setLoading(false)
-      }
+  const experiences = [
+    {
+      id: 1,
+      title: 'NOC Engineer',
+      company: 'Disa Cloud',
+      location: 'Bekasi, West Java',
+      startDate: '2024-02-01',
+      endDate: null,
+      description: 'Currently working as a Network Operations Center (NOC) Engineer at Disa Cloud. Your main responsibility is real-time monitoring of Disacloud\'s infrastructure systems. You have improved visibility across Internet Service Provider (ISP) environment by implementing several tools, such as LibreNMS for multi-POP traffic analysis, Mixradius for client data monitoring, and Winbox for in-depth diagnostics of network anomalies. Thanks to these efforts, issue detection and response time improved by 25%.',
+      type: 'work',
+      current: true
+    },
+    {
+      id: 2,
+      title: 'Network Technician',
+      company: 'Disa Cloud',
+      location: 'Bekasi, West Java',
+      startDate: '2023-10-01',
+      endDate: '2023-12-31',
+      description: 'You completed an internship at Disa Cloud as a Network Technician. This role involved supporting device installations, maintenance, and dismantling of client equipment. The experience strengthened your understanding of ISP field operations and enhanced your technical proficiency with fiber optic tools. Equipment mastered includes Fusion Splicer, Fiber Stripper, Fiber Cleaver, Optical Power Meter (OPM), Visual Fault Locator (VFL), Optical Light Source (OLS), and OTDR. These efforts increased installation accuracy and network reliability by 30%.',
+      type: 'work',
+      current: false
+    },
+    {
+      id: 3,
+      title: 'Bachelor\'s Degree in Information Systems',
+      company: 'Telkom University, Jakarta Campus',
+      location: 'Jakarta, Indonesia',
+      startDate: '2021-08-01',
+      endDate: '2025-08-31',
+      description: 'Currently pursuing a Bachelor\'s degree in Information Systems with a current GPA of 3.56. During your studies, you have been active in academic and organizational activities:\n\n1. Laboratory Assistant (2023): Served as a Database course assistant, supporting lab sessions and guiding students in database management tasks.\n\n2. Secretary of IMMA (2022): Held position of Secretary in the Information Systems Student Association, responsible for administrative duties and coordinating organizational events.',
+      type: 'education',
+      current: false
     }
+  ]
+  const [selectedType, setSelectedType] = useState<string>('all')
 
-    fetchExperiences()
-  }, [])
-
-  const filteredExperiences = selectedType === 'all' 
-    ? experiences 
+  const filteredExperiences = selectedType === 'all'
+    ? experiences
     : experiences.filter(exp => exp.type === selectedType)
 
   const containerVariants = {
@@ -120,11 +125,6 @@ const Experience = () => {
         </motion.div>
 
         {/* Timeline */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          </div>
-        ) : (
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -187,14 +187,13 @@ const Experience = () => {
                   </p>
 
                   {/* Description */}
-                  <p className="text-gray-700 leading-relaxed">
+                  <div className="text-gray-700 leading-relaxed whitespace-pre-line text-justify">
                     {experience.description}
-                  </p>
+                  </div>
                 </motion.div>
               </motion.div>
             ))}
           </motion.div>
-        )}
       </div>
     </div>
   )

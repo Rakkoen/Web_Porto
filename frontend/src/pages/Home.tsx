@@ -73,8 +73,15 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mb-8"
             >
-              <div className="w-40 h-40 mx-auto bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-4xl font-bold">
-                RI
+              <div className="w-40 h-40 mx-auto overflow-hidden rounded-full border-4 border-white shadow-lg">
+                <img
+                  src="/profile-photo.jpg"
+                  alt="Rakha Hendriansyah Ismail"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%233B82F6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='48' font-family='Arial, sans-serif'%3ERHI%3C/text%3E%3C/svg%3E";
+                  }}
+                />
               </div>
             </motion.div>
 
@@ -84,7 +91,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-4xl md:text-6xl font-bold text-gray-900 mb-4"
             >
-              Rakun Ismail
+              Rakha Hendriansyah Ismail
             </motion.h1>
 
             <motion.h2

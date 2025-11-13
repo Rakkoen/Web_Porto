@@ -1,4 +1,4 @@
-# 🌐 Personal Website - Rakun Ismail
+# 🌐 Personal Website - Rakha Hendriansyah Ismail
 
 A professional personal portfolio website built with React + TypeScript for the frontend and Express + TypeScript for the backend, using PostgreSQL as the main database with Prisma ORM.
 

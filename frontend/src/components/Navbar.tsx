@@ -46,7 +46,7 @@ const Navbar = () => {
             to="/"
             className="text-2xl font-bold text-primary-600 hover:text-primary-700 transition-colors"
           >
-            Rakun Ismail
+            Rakha Hendriansyah Ismail
           </Link>
 
           {/* Desktop Navigation */}

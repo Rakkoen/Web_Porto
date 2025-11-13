@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import {
+  FaReact, FaDocker, FaLinux, FaWindows
+} from 'react-icons/fa'
+import {
+  SiTypescript, SiMysql, SiPostgresql, SiVercel,
+  SiNestjs, SiMikrotik, SiCisco, SiUbiquiti,
+  SiFortinet
+} from 'react-icons/si'
 
 interface Skill {
   id: number
@@ -12,38 +20,6 @@ interface Skill {
 }
 
 const Skills = () => {
-  const [skills, setSkills] = useState<Skill[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const response = await axios.get('/api/skills')
-        setSkills(response.data)
-      } catch (error) {
-        console.error('Error fetching skills:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchSkills()
-  }, [])
-
-  const categories = ['all', ...Array.from(new Set(skills.map(skill => skill.category)))]
-
-  const filteredSkills = selectedCategory === 'all' 
-    ? skills 
-    : skills.filter(skill => skill.category === selectedCategory)
-
-  const skillsByLevel = filteredSkills.reduce((acc, skill) => {
-    if (!acc[skill.level]) {
-      acc[skill.level] = []
-    }
-    acc[skill.level].push(skill)
-    return acc
-  }, {} as Record<string, Skill[]>)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,18 +42,50 @@ const Skills = () => {
     },
   }
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'Expert':
-        return 'bg-green-100 text-green-800 border-green-200'
-      case 'Advanced':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
-      case 'Intermediate':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+  const getSkillIcon = (skillName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      'React': <FaReact className="text-blue-500" />,
+      'NestJS': <SiNestjs className="text-red-600" />,
+      'TypeScript': <SiTypescript className="text-blue-600" />,
+      'MySQL': <SiMysql className="text-blue-600" />,
+      'PostgreSQL': <SiPostgresql className="text-blue-700" />,
+      'Docker': <FaDocker className="text-blue-600" />,
+      'Vercel': <SiVercel className="text-black" />,
+      'Mikrotik': <SiMikrotik className="text-blue-600" />,
+      'Cisco': <SiCisco className="text-blue-700" />,
+      'Ubiquiti': <SiUbiquiti className="text-black" />,
+      'Ruijie': <FaLinux className="text-red-600" />,
+      'Fortigate': <SiFortinet className="text-red-700" />,
+      'NMS': <FaLinux className="text-gray-800" />,
+      'Windows': <FaWindows className="text-blue-600" />,
+      'Linux': <FaLinux className="text-gray-800" />
     }
+    return iconMap[skillName] || <FaLinux className="text-gray-600" />
   }
+
+  const techStackSkills = [
+    { name: 'React', category: 'Frontend' },
+    { name: 'NestJS', category: 'Backend' },
+    { name: 'TypeScript', category: 'Language' },
+    { name: 'MySQL', category: 'Database' },
+    { name: 'PostgreSQL', category: 'Database' },
+    { name: 'Docker', category: 'DevOps' },
+    { name: 'Vercel', category: 'Deployment' }
+  ]
+
+  const networkingSkills = [
+    { name: 'Mikrotik', category: 'Network Hardware' },
+    { name: 'Cisco', category: 'Network Hardware' },
+    { name: 'Ubiquiti', category: 'Network Hardware' },
+    { name: 'Ruijie', category: 'Network Hardware' },
+    { name: 'Fortigate', category: 'Network Security' },
+    { name: 'NMS', category: 'Network Management' }
+  ]
+
+  const osSkills = [
+    { name: 'Windows', category: 'Operating System' },
+    { name: 'Linux', category: 'Operating System' }
+  ]
 
   return (
     <div className="min-h-screen pt-20">
@@ -90,131 +98,119 @@ const Skills = () => {
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Skills & Tools
+            Skills & Expertise
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            A comprehensive overview of my technical skills, tools, and technologies 
-            I work with to build amazing digital experiences.
+            A comprehensive overview of my technical skills across different domains
+            including web development, networking, and system administration.
           </p>
         </motion.div>
 
-        {/* Category Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
-                selectedCategory === category
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Skills by Level */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          </div>
-        ) : (
-          <div className="space-y-16">
-            {Object.entries(skillsByLevel).map(([level, levelSkills]) => (
-              <motion.div
-                key={level}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex items-center gap-4 mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">{level}</h2>
-                  <span className={`px-4 py-1 rounded-full text-sm font-medium border ${getLevelColor(level)}`}>
-                    {levelSkills.length} {levelSkills.length === 1 ? 'skill' : 'skills'}
-                  </span>
-                </div>
-
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                >
-                  {levelSkills.map((skill) => (
-                    <motion.div
-                      key={skill.id}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-all duration-300"
-                    >
-                      <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                        {skill.name.substring(0, 2).toUpperCase()}
-                      </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">{skill.name}</h3>
-                      <p className="text-sm text-gray-600 mb-3">{skill.category}</p>
-                      {skill.description && (
-                        <p className="text-xs text-gray-500 line-clamp-2">{skill.description}</p>
-                      )}
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-
-        {/* Tools Section */}
+        {/* Tech Stack Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="mt-20"
+          className="mb-20"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-            Development Tools & Software
+            Tech Stack
           </h2>
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {[
-              { name: 'VS Code', category: 'IDE' },
-              { name: 'Git', category: 'Version Control' },
-              { name: 'Docker', category: 'Containerization' },
-              { name: 'Figma', category: 'Design' },
-              { name: 'Postman', category: 'API Testing' },
-              { name: 'Chrome DevTools', category: 'Debugging' },
-              { name: 'Webpack', category: 'Build Tools' },
-              { name: 'npm', category: 'Package Manager' },
-              { name: 'Linux', category: 'OS' },
-              { name: 'Windows', category: 'OS' },
-              { name: 'MongoDB Compass', category: 'Database' },
-              { name: 'TablePlus', category: 'Database' }
-            ].map((tool, index) => (
+            {techStackSkills.map((skill, index) => (
               <motion.div
-                key={tool.name}
+                key={skill.name}
                 variants={itemVariants}
-                whileHover={{ scale: 1.1 }}
-                className="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-all duration-300"
               >
-                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                  {tool.name.substring(0, 2)}
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <div className="text-5xl">
+                    {getSkillIcon(skill.name)}
+                  </div>
                 </div>
-                <p className="text-sm font-medium text-gray-700">{tool.name}</p>
-                <p className="text-xs text-gray-500">{tool.category}</p>
+                <h3 className="font-semibold text-gray-900 mb-2">{skill.name}</h3>
+                <p className="text-sm text-gray-600">{skill.category}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Networking Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="mb-20"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+            Networking
+          </h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {networkingSkills.map((skill, index) => (
+              <motion.div
+                key={skill.name}
+                variants={itemVariants}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-all duration-300"
+              >
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <div className="text-5xl">
+                    {getSkillIcon(skill.name)}
+                  </div>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{skill.name}</h3>
+                <p className="text-sm text-gray-600">{skill.category}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Operating Systems Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+            Operating Systems (OS)
+          </h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {osSkills.map((skill, index) => (
+              <motion.div
+                key={skill.name}
+                variants={itemVariants}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-all duration-300"
+              >
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <div className="text-5xl">
+                    {getSkillIcon(skill.name)}
+                  </div>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{skill.name}</h3>
+                <p className="text-sm text-gray-600">{skill.category}</p>
               </motion.div>
             ))}
           </motion.div>
